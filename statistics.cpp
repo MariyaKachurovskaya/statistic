@@ -12,33 +12,81 @@ public:
 
 class Min : public IStatistics {
 public:
-	Min() : m_min{std::numeric_limits<double>::min()} {
-	}
+    Min() : m_min{std::numeric_limits<double>::min()} {
+    }
 
-	void update(double next) override {
-		if (next < m_min) {
-			m_min = next;
-		}
-	}
+    void update(double next) override {
+        if (next < m_min) {
+            m_min = next;
+        }
+    }
 
-	double eval() const override {
-		return m_min;
-	}
+    double eval() const override {
+        return m_min;
+    }
 
-	const char * name() const override {
-		return "min";
-	}
+    const char * name() const override {
+        return "min";
+    }
 
 private:
-	double m_min;
+    double m_min;
+};
+
+class Max : public IStatistics {
+public:
+    Max() : m_max{std::numeric_limits<double>::max()} {
+    }
+
+    void update(double next) override {
+        if (next > m_max) {
+            m_max = next;
+        }
+    }
+
+    double eval() const override {
+        return m_max;
+    }
+
+    const char * name() const override {
+        return "max";
+    }
+
+private:
+    double m_max;
+};
+
+class Mean : public IStatistics {
+public:
+    Mean() : count{0}, m_sum{0} {
+    }
+
+    void update(double next) override {
+        count++;
+        m_sum += next;
+    }
+
+    double eval() const override {
+        return m_sum / count;
+    }
+
+    const char * name() const override {
+        return "mean";
+    }
+
+private:
+    int count;
+    double m_sum;
 };
 
 int main() {
 
-	const size_t statistics_count = 1;
+	const size_t statistics_count = 3;
 	IStatistics *statistics[statistics_count];
 
-	statistics[0] = new Min{};
+    statistics[0] = new Min{};
+    statistics[1] = new Max{};
+    statistics[2] = new Mean{};
 
 	double val = 0;
 	while (std::cin >> val) {
